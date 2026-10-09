@@ -51,7 +51,10 @@ jobs:
 
       - name: Install dependencies
         if: steps.merge.outputs.changed == 'true'
-        run: npm ci
+        # Upstream's lockfile pins wrangler 4.146.0, whose peerOptional
+        # @cloudflare/workers-types@^5 conflicts with the project's ^4 pin.
+        # Drop this flag once shuaiplus/nodewarden#307 (workers-types v5) lands.
+        run: npm ci --legacy-peer-deps
 
       - name: Validate and build
         if: steps.merge.outputs.changed == 'true'
