@@ -68,6 +68,8 @@ jobs:
       - name: Push validated update
         if: steps.merge.outputs.changed == 'true'
         env:
-          GH_TOKEN: ${{ github.token }}
+          # GITHUB_TOKEN cannot push changes under .github/workflows/; SYNC_TOKEN is a
+          # fine-grained PAT with Contents + Workflows write. Falls back if unset.
+          GH_TOKEN: ${{ secrets.SYNC_TOKEN || github.token }}
         shell: bash
         run: git push "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" HEAD:main
